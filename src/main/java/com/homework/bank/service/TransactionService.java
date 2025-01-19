@@ -1,11 +1,14 @@
 package com.homework.bank.service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.homework.bank.model.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -13,7 +16,12 @@ public class TransactionService {
     // userId -> (transactionId -> transaction)
     private static ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
 
-    //TODO: 分类查询要加索引
+    // 创建一个 Guava Cache 实例，缓存时间为 10 秒
+    private final Cache<String, Boolean> cacheForCheckDuplicate = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build();
+
+    //TODO: 添加一个索引进行分类查询
 
     public TransactionService() {
 
@@ -80,6 +88,8 @@ public class TransactionService {
             return null;
         }
 
+        checkDuplicate(transaction);
+
         if (transactionsMap.containsKey(transaction.getUserId())) {
             LinkedHashMap<String, Transaction> transactions = transactionsMap.get(transaction.getUserId());
             transactions.put(transaction.getId(), transaction);
@@ -93,9 +103,15 @@ public class TransactionService {
     }
 
     public void deleteById(String id, String userId) {
+        LinkedHashMap<String, Transaction> transactions = new LinkedHashMap<>();
+
         if (transactionsMap.containsKey(userId)) {
-            LinkedHashMap<String, Transaction> transactions = transactionsMap.get(userId);
+            transactions = transactionsMap.get(userId);
             transactions.remove(id);
+        }
+
+        if (transactions.isEmpty()) {
+            throw new RuntimeException("Transaction not exists!");
         }
     }
 
@@ -107,5 +123,18 @@ public class TransactionService {
         }
 
         return null;
+    }
+
+    // 检测重复提交
+    private void checkDuplicate(Transaction transaction){
+
+        // 生成唯一键
+        String key = transaction.getUserId() + "-" + transaction.getAmount() + transaction.getTransactionType();
+
+        if (cacheForCheckDuplicate.getIfPresent(key) != null) {
+            throw new RuntimeException("Duplicate submission detected. Please wait for a while before performing the operation.");
+        }
+
+        cacheForCheckDuplicate.put(key, true);
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(PasswordNotMatchException.class)
-    public String handleCustomException(PasswordNotMatchException ex, RedirectAttributes redirectAttributes) {
+    public String handlePasswordNotMatchException(PasswordNotMatchException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", ex.getMessage());
         return "redirect:/index";
     }
