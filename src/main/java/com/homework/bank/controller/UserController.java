@@ -17,10 +17,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
-    public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+    @PostMapping("/loginOrSignUp")
+    public String loginOrSignUp(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
 
-        redirectAttributes.addAttribute("userId", userService.createUser(user.getName()).getId());
+        redirectAttributes.addAttribute("userId", userService.getOrCreate(user.getName()).getId());
 
         return "redirect:/transactions";
     }

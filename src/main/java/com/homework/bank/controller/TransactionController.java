@@ -18,7 +18,6 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    // http://localhost:8080/transactions?userId=1001
     @RequestMapping
     public String getTransactions( @RequestParam String userId,
                                    @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
@@ -27,7 +26,7 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getPagedListByUserId(userId, pageIndex, pageSize);
         model.addAttribute("transactions", transactions);
         model.addAttribute("userId", userId);
-        return "transactions"; // 返回 Thymeleaf 模板的名称
+        return "transactions";
     }
 
     @GetMapping("/{userId}/{id}")
@@ -42,18 +41,13 @@ public class TransactionController {
         model.addAttribute("transaction", transaction);
         return "transactionDetail";
     }
-//
-//    @GetMapping("/create")
-//    public String showCreateForm(Model model) {
-//        model.addAttribute("transaction", new Transaction());
-//        return "transactionDetail";
-//    }
 
     @GetMapping("/create")
     public String showCreateForm(@RequestParam String userId, Model model) {
         Transaction transaction = new Transaction();
         transaction.setUserId(userId);
         model.addAttribute("transaction", transaction);
+        model.addAttribute("userId", userId);
         return "transactionDetail";
     }
 
@@ -65,17 +59,11 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
-//    @GetMapping("/edit/{userId}/{id}")
-//    public String showEditForm(@PathVariable String id, @PathVariable String userId, Model model) {
-//        Transaction transaction = transactionService.findById(id, userId);
-//        model.addAttribute("transaction", transaction);
-//        return "transactionDetail";
-//    }
-
     @GetMapping("/edit")
     public String showEditForm(@RequestParam String id, @RequestParam String userId, Model model) {
         Transaction transaction = transactionService.findById(id, userId);
         model.addAttribute("transaction", transaction);
+        model.addAttribute("userId", userId);
         return "transactionDetail";
     }
 
@@ -86,22 +74,10 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
-//    @PutMapping("/edit/{userId}/{id}")
-//    public String updateTransaction(@PathVariable String id, @ModelAttribute Transaction transaction) {
-//        transaction.setId(id);
-//        transactionService.save(transaction);
-//        return "redirect:/transactions/{userId}";
-//    }
-
     @GetMapping("/delete")
     public String deleteTransaction(@RequestParam String id, @RequestParam String userId, RedirectAttributes redirectAttributes) {
         transactionService.deleteById(id, userId);
         redirectAttributes.addAttribute("userId", userId);
         return "redirect:/transactions";
     }
-//    @GetMapping("/delete/{userId}/{id}")
-//    public String deleteTransaction(@PathVariable String id, @PathVariable String userId) {
-//        transactionService.deleteById(id, userId);
-//        return "redirect:/transactions";
-//    }
 }

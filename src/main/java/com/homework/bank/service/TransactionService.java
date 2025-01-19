@@ -13,7 +13,7 @@ public class TransactionService {
     private Transaction mock;
 
     // userId -> (transactionId -> transaction)
-    private ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
+    private static ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
 
     //TODO: 使用hashmap会怎样
 //    private HashMap<String, List<Transaction>> transactions;

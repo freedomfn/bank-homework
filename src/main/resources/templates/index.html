@@ -8,16 +8,19 @@
 <div class="container mt-5">
     <div class="card">
         <div class="card-header">
-            <h1>Login</h1>
+            <h1>Login or Sign Up</h1>
         </div>
         <div class="card-body">
-            <form th:action="@{users/create}" method="post">
+            <form th:action="@{users/loginOrSignUp}" method="post">
                 <div class="form-group">
-                    <label for="username">用户名</label>
-                    <input type="text" id="username" name="username" class="form-control" required>
+                    <label for="name">User Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                    <input type="text" id="password" name="password" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Or User Name Error</span>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            <div th:if="${error}" th:text="${error}" style="color: red;"></div>
         </div>
     </div>
 </div>
