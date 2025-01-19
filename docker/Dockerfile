@@ -1,5 +1,5 @@
-FROM bitnami/java:21.0.5-11
-ADD app.jar /app
-WORKDIR /app
+FROM openjdk:21
+ADD app.jar /
+WORKDIR /
 EXPOSE 80
 CMD java -jar $JAVA_OPTS app.jar

@@ -1,12 +1,16 @@
+# nonk8s
 ---
 # deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bank
   namespace: default
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: bank
   template:
     metadata:
       labels:
@@ -14,9 +18,9 @@ spec:
     spec:
       containers:
         - name: bank
-          image: cwj/bank:latest
+          image: cwj/bank:v1
           ports:
-            - containerPort: 80
+            - containerPort: 8080
 
 ---
 # service
@@ -29,7 +33,7 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
+      targetPort: 8080
   selector:
     app: bank
   type: NodePort
