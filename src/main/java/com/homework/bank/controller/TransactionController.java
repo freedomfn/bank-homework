@@ -82,6 +82,7 @@ public class TransactionController {
         return "transactionDetail";
     }
 
+    // TODO: 按照规范应该用PATCH，但是调试的时候遇到问题，暂时还没能解决
     @PostMapping("/edit")
     public String updateTransaction(@Valid @ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
         transactionService.save(transaction);
