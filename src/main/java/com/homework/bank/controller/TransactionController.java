@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +53,7 @@ public class TransactionController {
     }
 
     @PostMapping("/create")
-    public String createTransaction(@ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
+    public String createTransaction(@Valid @ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
         transaction.setId(UUID.randomUUID().toString());
         transactionService.save(transaction);
         redirectAttributes.addAttribute("userId", transaction.getUserId());
@@ -68,7 +69,7 @@ public class TransactionController {
     }
 
     @PostMapping("/edit")
-    public String updateTransaction(@ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
+    public String updateTransaction(@Valid @ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
         transactionService.save(transaction);
         redirectAttributes.addAttribute("userId", transaction.getUserId());
         return "redirect:/transactions";

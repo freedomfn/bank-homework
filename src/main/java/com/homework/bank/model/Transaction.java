@@ -1,11 +1,14 @@
 package com.homework.bank.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Transaction {
     private String id;
     private String userId;
-//    private String accountNumber;
+    @NotNull(message = "Amount is required")
+    @Min(value = 0, message = "Amount must be greater than or equal to 0")
     private BigDecimal amount;
     private String transactionType;
 
@@ -16,13 +19,6 @@ public class Transaction {
     public void setId(String id) {
         this.id = id;
     }
-
-//    public String getAccountNumber() {
-//        return accountNumber;
-//    }
-//public void setAccountNumber(String accountNumber) {
-//    this.accountNumber = accountNumber;
-//}
 
     public void setUserId(String userId) {
         this.userId = userId;
