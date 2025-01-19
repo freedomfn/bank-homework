@@ -1,5 +1,6 @@
 package com.homework.bank.controller;
 
+import com.homework.bank.common.exception.PasswordNotMatchException;
 import com.homework.bank.model.User;
 import com.homework.bank.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,12 @@ public class UserController {
     @PostMapping("/loginOrSignUp")
     public String loginOrSignUp(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
 
-        redirectAttributes.addAttribute("userId", userService.getOrCreate(user.getName()).getId());
+        try {
+            redirectAttributes.addAttribute("userId", userService.getOrCreate(user.getName(), user.getPassword()).getId());
+        } catch (PasswordNotMatchException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
 
         return "redirect:/transactions";
     }

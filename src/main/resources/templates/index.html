@@ -15,10 +15,10 @@
                 <div class="form-group">
                     <label for="name">User Name</label>
                     <input type="text" id="name" name="name" class="form-control" required>
+                    <label for="name">Password</label>
                     <input type="text" id="password" name="password" class="form-control" required>
-                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Or User Name Error</span>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Log in</button>
             </form>
             <div th:if="${error}" th:text="${error}" style="color: red;"></div>
         </div>
