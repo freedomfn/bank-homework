@@ -10,26 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class TransactionService {
 
-    private Transaction mock;
-
     // userId -> (transactionId -> transaction)
     private static ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
 
-    //TODO: 使用hashmap会怎样
-//    private HashMap<String, List<Transaction>> transactions;
     //TODO: 分类查询要加索引
 
     public TransactionService() {
 
         transactionsMap = new ConcurrentHashMap<>();
-
-        mock = new Transaction();
-        mock.setId(UUID.randomUUID().toString());
-//        mock.setAccountNumber("123456789");
-        mock.setAmount(BigDecimal.valueOf(1000));
-        mock.setTransactionType("DEPOSIT");
-
-//        transactionsMap.put(mock.getId(), List.of(mock));
     }
 
     public List<Transaction> getPagedListByUserId(String userId, Integer pageIndex, Integer pageSize) {
@@ -40,7 +28,6 @@ public class TransactionService {
 
         if (transactionsMap.containsKey(userId)) {
             LinkedHashMap<String, Transaction> transactions = transactionsMap.get(userId);
-//            List<Transaction> transactions = transactionsMap.get(userId);
             if (transactions != null && !transactions.isEmpty()) {
                 return pageHelper(transactions, pageIndex, pageSize);
             }
@@ -86,25 +73,6 @@ public class TransactionService {
         return pagedList;
 
     }
-
-//    /**
-//     * 分页后取出对应页码的数据，由于原来的数组是逆序存进来的，所以这里做了逆序取出的方法
-//     * @param list 用户的交易列表
-//     * @param pageIndex 页码
-//     * @param pageSize 页的大小
-//     * @return
-//     */
-//    private List<Transaction> pageHelper(List<Transaction> list, Integer pageIndex, Integer pageSize) {
-//
-//        Integer total = list.size();
-//        Integer end = total - (pageIndex - 1) * pageSize - 1;
-//        Integer begin = Math.max(0, end - 9);
-//        List<Transaction> pagedList = list.subList(begin, end);
-//        Collections.reverse(pagedList);
-//
-//        return pagedList;
-//
-//    }
 
     public Transaction save(Transaction transaction) {
 
