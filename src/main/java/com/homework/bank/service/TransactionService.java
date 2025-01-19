@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
 public class TransactionService {
 
     // userId -> (transactionId -> transaction)
-    private static ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
+    public static ConcurrentHashMap<String, LinkedHashMap<String, Transaction>> transactionsMap;
 
     // 创建一个 Guava Cache 实例，缓存时间为 10 秒
-    private final Cache<String, Boolean> cacheForCheckDuplicate = CacheBuilder.newBuilder()
+    public final Cache<String, Boolean> cacheForCheckDuplicate = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build();
 
@@ -118,6 +118,9 @@ public class TransactionService {
                 throw new RuntimeException("Transaction not exists!");
             }
             transactions.remove(id);
+        }
+        else {
+            throw new RuntimeException("Transaction not exists!");
         }
     }
 

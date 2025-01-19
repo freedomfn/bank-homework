@@ -13,6 +13,10 @@
 ├── src                                     代码目录
 ```
 
-## 第三方类库
+## 类库
 ```aidl
-    
+spring-boot-starter-thymeleaf   模板引擎
+guava                           本地缓存
+Hibernate Validator             数据校验
+Validation API                  数据校验
+```
