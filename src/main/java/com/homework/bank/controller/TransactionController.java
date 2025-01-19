@@ -49,7 +49,6 @@ public class TransactionController {
     public String getTransactionById(@PathVariable String id, @PathVariable String userId, Model model) {
         Transaction transaction = transactionService.findById(id, userId);
 
-        //TODO: 暂时处置
         if (transaction == null) {
             transaction = new Transaction();
         }

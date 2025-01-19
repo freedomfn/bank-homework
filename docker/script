@@ -1,1 +1,5 @@
+--镜像构建
 docker build -t cwj/bank:v1 .
+
+--镜像启动
+docker run -it -p 8080:8080 cwj/bank:v1
