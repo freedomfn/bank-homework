@@ -1,5 +1,6 @@
 package com.homework.bank.controller;
 
+import com.homework.bank.model.PageResponse;
 import com.homework.bank.model.Transaction;
 import com.homework.bank.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,9 +26,22 @@ public class TransactionController {
                                    @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
                                    Model model) {
-        List<Transaction> transactions = transactionService.getPagedListByUserId(userId, pageIndex, pageSize);
-        model.addAttribute("transactions", transactions);
+
+        PageResponse pageResponse = transactionService.getPagedListByUserId(userId, pageIndex, pageSize);
         model.addAttribute("userId", userId);
+        model.addAttribute("pageIndex", pageIndex);
+        model.addAttribute("pageSize", pageSize);
+
+        if (pageResponse == null) {
+            model.addAttribute("transactions", new ArrayList<Transaction>());
+            model.addAttribute("totalPage", 1);
+        }
+        else {
+            List<Transaction> transactions = pageResponse.getList();
+            model.addAttribute("transactions", transactions);
+            model.addAttribute("totalPage", pageResponse.getTotalPage());
+        }
+
         return "transactions";
     }
 

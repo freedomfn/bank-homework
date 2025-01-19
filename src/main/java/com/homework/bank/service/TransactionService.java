@@ -2,6 +2,7 @@ package com.homework.bank.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.homework.bank.model.PageResponse;
 import com.homework.bank.model.Transaction;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class TransactionService {
         transactionsMap = new ConcurrentHashMap<>();
     }
 
-    public List<Transaction> getPagedListByUserId(String userId, Integer pageIndex, Integer pageSize) {
+    public PageResponse getPagedListByUserId(String userId, Integer pageIndex, Integer pageSize) {
 
         if (userId == null || pageIndex == null || pageSize == null) {
             return null;
@@ -37,7 +38,8 @@ public class TransactionService {
         if (transactionsMap.containsKey(userId)) {
             LinkedHashMap<String, Transaction> transactions = transactionsMap.get(userId);
             if (transactions != null && !transactions.isEmpty()) {
-                return pageHelper(transactions, pageIndex, pageSize);
+                PageResponse pageResponse = pageHelper(transactions, pageIndex, pageSize);
+                return pageResponse;
             }
         }
 
@@ -68,17 +70,22 @@ public class TransactionService {
      * @param pageSize 页的大小
      * @return
      */
-    private List<Transaction> pageHelper(LinkedHashMap<String, Transaction> map, Integer pageIndex, Integer pageSize) {
+    private PageResponse pageHelper(LinkedHashMap<String, Transaction> map, Integer pageIndex, Integer pageSize) {
 
         List<Transaction> list = new ArrayList<>(map.values());
 
         int total = list.size();
+        int totalPage = total / pageSize + 1;
         int end = total - (pageIndex - 1) * pageSize;
         int begin = Math.max(0, end - 10);
         List<Transaction> pagedList = list.subList(begin, end);
         Collections.reverse(pagedList);
 
-        return pagedList;
+        PageResponse pageResponse = new PageResponse();
+        pageResponse.setList(pagedList);
+        pageResponse.setTotalPage(totalPage);
+
+        return pageResponse;
 
     }
 
@@ -107,11 +114,10 @@ public class TransactionService {
 
         if (transactionsMap.containsKey(userId)) {
             transactions = transactionsMap.get(userId);
+            if (transactions.isEmpty() || !transactions.containsKey(id)) {
+                throw new RuntimeException("Transaction not exists!");
+            }
             transactions.remove(id);
-        }
-
-        if (transactions.isEmpty()) {
-            throw new RuntimeException("Transaction not exists!");
         }
     }
 
