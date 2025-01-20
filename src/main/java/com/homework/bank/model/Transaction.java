@@ -1,15 +1,22 @@
 package com.homework.bank.model;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 
+@Valid
 public class Transaction {
     private String id;
+
     private String userId;
+
     @NotNull(message = "Amount is required")
     @Min(value = 0, message = "Amount must be greater than or equal to 0")
     private BigDecimal amount;
+
+    @NotNull(message = "TransactionType is required")
     private String transactionType;
 
     public String getId() {

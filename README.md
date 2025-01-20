@@ -32,8 +32,7 @@ docker run -it -p 8080:8080 cwj/bank:v1
 ```aidl
 spring-boot-starter-thymeleaf   模板引擎
 guava                           本地缓存
-Hibernate Validator             数据校验
-Validation API                  数据校验
 mockito-core                    单测相关
 spring-boot-starter-test        单测相关
+spring-boot-starter-validation  数据校验
 ```
